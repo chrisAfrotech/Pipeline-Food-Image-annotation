@@ -1,1 +1,15 @@
+name: deploy-food-image-annotation-test
+run-name: ${{github.actor}} is using Github actions
+on: 
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+env: 
+  APP_CENTER_TOKEN: ${{ secrets.APP_CENTER_TOKEN_MYAPP_ANDROID_TEST }}
+  APP_NAME: ${{ ‘MyApp-Android/ENV_TEST’ }}
+  TESTING_GROUP: ${{ ‘ENV_TEST’ }}
+  UPLOAD_FILE: ${{ ‘android/app/build/outputs/apk/app-release.apk' }}
 
+jobs:
+  
