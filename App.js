@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Ci cd pipeline done...</Text>
+      <Text>Ci cd pipeline well done...</Text>
       <StatusBar style="auto" />
     </View>
   );
