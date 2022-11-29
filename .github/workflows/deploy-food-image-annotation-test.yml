@@ -1,15 +1,52 @@
-name: deploy-food-image-annotation-test
-run-name: ${{github.actor}} is using Github actions
-on: 
-  pull_request:
-    branches: [master]
+name: Deploy-Android-TEST 
+
+on:
   push:
     branches: [master]
-env: 
-  APP_CENTER_TOKEN: ${{ secrets.APP_CENTER_TOKEN_MYAPP_ANDROID_TEST }}
-  APP_NAME: ${{ ‘MyApp-Android/ENV_TEST’ }}
-  TESTING_GROUP: ${{ ‘ENV_TEST’ }}
-  UPLOAD_FILE: ${{ ‘android/app/build/outputs/apk/app-release.apk' }}
+  pull_request:
+    branches: [master]
+    
+env:
+  APP_CENTER_TOKEN: ${{ secrets.TOKEN_ENV_TEST  }}  
+  APP_NAME: ${{ 'ExempleMobileDevOps/ENV_TEST'  }}  
+  TESTING_GROUP: ${{  'ENV_TEST'  }} 
+  UPLOAD_FILE: ${{ 'android/app/build/outputs/apk/app-release.apk'  }}  
+  
 
 jobs:
-  
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout | - 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: npm
+
+      - name: 🏗 Setup Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+        
+      - name: 📦 Install dependencie
+        run: npm install
+
+      - name: 🚀 Build app
+        run: eas build --non-interactive --platform=android
+
+      - name: Upload to App Center
+        uses: wzieba/AppCenter-Github-Action@v1
+        with:
+          appName: ${{ env.APP_NAME }}
+          token: ${{ env.APP_CENTER_TOKEN }}
+          group: ${{ env.TESTING_GROUP }}
+          file: ${{ env.UPLOAD_FILE }}
+          notifyTesters: true
+          debug: false
